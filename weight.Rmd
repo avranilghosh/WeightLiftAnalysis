@@ -71,47 +71,74 @@ set.seed(32323)
 model1<-randomForest(classe~.,data=train1[1:56])
 pred1<-predict(model1,test1[1:55])
 tab<-table(test1$classe,pred1)
-pred2<-predict(model1,test2[1:55])
+model2<-randomForest(classe~.,data=train2[1:56])
+pred2<-predict(model2,test2[1:55])
 tab2<-table(test2$classe,pred2)
-pred3<-predict(model1,test3[1:55])
+model3<-randomForest(classe~.,data=train3[1:56])
+pred3<-predict(model3,test3[1:55])
 tab3<-table(test3$classe,pred3)
 
 ```
 
-```{r modelout,echo=FALSE,cache=TRUE}
+```{r modelout1,echo=FALSE,cache=TRUE}
 print(model1)
-tab<-as.matrix(tab)
-tab2<-as.matrix(tab2)
-tab3<-as.matrix(tab3)
 
 ```
 
 
 
-As we can see from the confusion Matix, the error rate is quite low = 0.28%.
+As we can see from the confusion Matix, the error rate is quite low = 0.34%.
 
 We use the above model to predict classe values for the first test data set and  plot the predicted values against the actual classe values:
 
 `r tab`
 
-We can see 21 cases out of 6541 total test values where there is mismatch. This gives misclassification error of 0.003 which shows that our model predicts 
+We can see 19 cases out of 6541 total test values where there is mismatch. This gives misclassification error of 0.003 which shows that our model predicts 
 quite well.
 
-We expect the same error rate when we use this model on the other test data sets generated using k fold. In fact when this model is fited into the other 2 
-test sets, we get the below tables when comparing actual to predicted values:
+We expect the same error rate when we use this model on the other test data sets generated using k fold. 
 
-Test data set 2:
+
+
+
+The model on second train dataset looks like:
+
+```{r modelout2,echo=FALSE,cache=TRUE}
+print(model2)
+
+```
+
+As we can see from the confusion Matix, the error rate is quite low = 0.32%.
+
+We use the above model to predict classe values for the first test data set and  plot the predicted values against the actual classe values:
 
 `r tab2`
 
-Test data set 3:
+We can see 17 cases out of 6541 total test values where there is mismatch. This gives misclassification error of 0.003 which shows that our model predicts 
+quite well.
+
+
+
+
+The model on third train dataset looks like:
+
+```{r modelout3,echo=FALSE,cache=TRUE}
+print(model3)
+
+```
+
+As we can see from the confusion Matix, the error rate is quite low = 0.28%.
+
+We use the above model to predict classe values for the first test data set and  plot the predicted values against the actual classe values:
 
 `r tab3`
 
+We can see 24 cases out of 6541 total test values where there is mismatch. This gives misclassification error of 0.004 which shows that our model predicts 
+quite well.
 
-We see misclassification error is 0 in both cases which shows absolute purity.
+Out of the 3 models generated above, all have very less misclasification error. Since the second model has the least mismatch cases, we proceed with our final prediction with the second model.
 
-We get similar outputs when we plot different models on the other 2 training datasets and cross validate on the other test data sets. In all cases error is quite low.
+
 
 ### Predicting Output
 
@@ -120,7 +147,7 @@ We use the above model to predict the output in the actual test data set:
 ```{r predictout,echo=FALSE,cache=TRUE}
 
 testing1<-rbind(test[1:55],test1[1:55])
-pred1f<-predict(model1,testing1)
+pred1f<-predict(model2,testing1)
 out<-pred1f[1:20]
 
 

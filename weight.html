@@ -84,25 +84,60 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 ##                      Number of trees: 500
 ## No. of variables tried at each split: 7
 ## 
-##         OOB estimate of  error rate: 0.28%
+##         OOB estimate of  error rate: 0.34%
 ## Confusion matrix:
 ##      A    B    C    D    E  class.error
-## A 3719    1    0    0    0 0.0002688172
-## B    5 2526    1    0    0 0.0023696682
-## C    0   10 2271    0    0 0.0043840421
-## D    0    0   15 2128    1 0.0074626866
-## E    0    0    0    4 2400 0.0016638935</code></pre>
+## A 3718    1    0    0    1 0.0005376344
+## B    5 2524    3    0    0 0.0031595577
+## C    0    9 2271    1    0 0.0043840421
+## D    0    0   16 2126    2 0.0083955224
+## E    0    0    0    6 2398 0.0024958403</code></pre>
+<p>As we can see from the confusion Matix, the error rate is quite low = 0.34%.</p>
+<p>We use the above model to predict classe values for the first test data set and plot the predicted values against the actual classe values:</p>
+<p>1860, 3, 0, 0, 0, 0, 1260, 2, 0, 0, 0, 2, 1139, 10, 0, 0, 0, 0, 1062, 2, 0, 0, 0, 0, 1201</p>
+<p>We can see 19 cases out of 6541 total test values where there is mismatch. This gives misclassification error of 0.003 which shows that our model predicts quite well.</p>
+<p>We expect the same error rate when we use this model on the other test data sets generated using k fold.</p>
+<p>The model on second train dataset looks like:</p>
+<pre><code>## 
+## Call:
+##  randomForest(formula = classe ~ ., data = train2[1:56]) 
+##                Type of random forest: classification
+##                      Number of trees: 500
+## No. of variables tried at each split: 7
+## 
+##         OOB estimate of  error rate: 0.32%
+## Confusion matrix:
+##      A    B    C    D    E class.error
+## A 3720    0    0    0    0 0.000000000
+## B    5 2523    3    0    0 0.003160806
+## C    0    8 2271    2    0 0.004384042
+## D    0    0   19 2123    2 0.009794776
+## E    0    0    0    3 2402 0.001247401</code></pre>
+<p>As we can see from the confusion Matix, the error rate is quite low = 0.32%.</p>
+<p>We use the above model to predict classe values for the first test data set and plot the predicted values against the actual classe values:</p>
+<p>1860, 1, 0, 0, 0, 0, 1265, 9, 0, 0, 0, 0, 1132, 4, 0, 0, 0, 0, 1068, 3, 0, 0, 0, 0, 1199</p>
+<p>We can see 17 cases out of 6541 total test values where there is mismatch. This gives misclassification error of 0.003 which shows that our model predicts quite well.</p>
+<p>The model on third train dataset looks like:</p>
+<pre><code>## 
+## Call:
+##  randomForest(formula = classe ~ ., data = train3[1:56]) 
+##                Type of random forest: classification
+##                      Number of trees: 500
+## No. of variables tried at each split: 7
+## 
+##         OOB estimate of  error rate: 0.28%
+## Confusion matrix:
+##      A    B    C    D    E class.error
+## A 3720    0    0    0    0 0.000000000
+## B    4 2524    3    0    0 0.002765705
+## C    0    5 2277    0    0 0.002191060
+## D    0    0   20 2123    1 0.009794776
+## E    0    0    0    4 2401 0.001663202</code></pre>
 <p>As we can see from the confusion Matix, the error rate is quite low = 0.28%.</p>
 <p>We use the above model to predict classe values for the first test data set and plot the predicted values against the actual classe values:</p>
-<p>1860, 3, 0, 0, 0, 0, 1257, 2, 0, 0, 0, 5, 1139, 9, 0, 0, 0, 0, 1063, 2, 0, 0, 0, 0, 1201</p>
-<p>We can see 21 cases out of 6541 total test values where there is mismatch. This gives misclassification error of 0.003 which shows that our model predicts quite well.</p>
-<p>We expect the same error rate when we use this model on the other test data sets generated using k fold. In fact when this model is fited into the other 2 test sets, we get the below tables when comparing actual to predicted values:</p>
-<p>Test data set 2:</p>
-<p>1860, 0, 0, 0, 0, 0, 1266, 0, 0, 0, 0, 0, 1141, 0, 0, 0, 0, 0, 1072, 0, 0, 0, 0, 0, 1202</p>
-<p>Test data set 3:</p>
-<p>1860, 0, 0, 0, 0, 0, 1266, 0, 0, 0, 0, 0, 1140, 0, 0, 0, 0, 0, 1072, 0, 0, 0, 0, 0, 1202</p>
-<p>We see misclassification error is 0 in both cases which shows absolute purity.</p>
-<p>We get similar outputs when we plot different models on the other 2 training datasets and cross validate on the other test data sets. In all cases error is quite low.</p>
+<p>1860, 5, 0, 0, 0, 0, 1261, 5, 0, 0, 0, 0, 1134, 10, 0, 0, 0, 1, 1061, 2, 0, 0, 0, 1, 1200</p>
+<p>We can see 24 cases out of 6541 total test values where there is mismatch. This gives misclassification error of 0.004 which shows that our model predicts quite well.</p>
+<p>Out of the 3 models generated above, all have very less misclasification error. Since the second model has the least mismatch cases, we proceed with our final prediction with the second model.</p>
 </div>
 <div id="predicting-output" class="section level3">
 <h3>Predicting Output</h3>
