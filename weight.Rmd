@@ -1,0 +1,131 @@
+---
+title: "Analysis of Pattern in Weight Lifting Exercise"
+author: "Avranil Ghosh"
+date: "Sunday, March 22, 2015"
+output: html_document
+---
+
+## Executive Sumary:
+
+Using devices such as Jawbone Up, Nike FuelBand, and Fitbit it is now possible to collect a large amount of data about personal activity relatively 
+inexpensively. These type of devices are part of the quantified self movement - a group of enthusiasts who take measurements about themselves regularly to 
+improve their health, to find patterns in their behavior.
+
+In this Report we will try to analyze the pattern in which barbell lifts were performed correctly/incorrectly in 5 different ways using data from 
+accelerometers on the belt, forearm, arm, and dumbell of 6 participants.
+
+The data for this project come from this source: http://groupware.les.inf.puc-rio.br/har
+
+
+### Loading data and cleaning
+
+```{r dataload,echo=FALSE,cache=TRUE}
+test<-read.csv("pml-testing.csv")
+train<-read.csv("pml-training.csv")
+name<-names(train)
+
+```
+
+We load the training and testing data from the source into train and test data frames. We further clean up the data to remove the columns with no values or 
+NA. We also delete the first column which stores only the row id. The cleaned dataset in train and test variables have 56 columns mentioned below:
+
+`r name`
+
+### Performing Data split
+
+```{r split,echo=FALSE,cache=TRUE}
+
+library(caret)
+set.seed(32323)
+
+folds<-createFolds(y=train$classe,k=3,list=TRUE,returnTrain=TRUE)
+
+train1<-train[folds[[1]],]
+test1<-train[-folds[[1]],]
+
+train2<-train[folds[[2]],]
+test2<-train[-folds[[2]],]
+
+train3<-train[folds[[3]],]
+test3<-train[-folds[[3]],]
+
+dtrain1<-dim(train1)
+dtest1<-dim(test1)
+
+```
+
+We perform K means clustering with k=3. Each fold has train and test data sets with the dimensions:
+
+`r dtrain1`
+
+`r dtest1`
+
+### ModelFitting
+
+We generate a model using random Forest on each of the train datasets generated from k fold. The model on first train dataset looks like:
+
+```{r modelfit,echo=FALSE,cache=TRUE}
+
+library(randomForest)
+set.seed(32323)
+model1<-randomForest(classe~.,data=train1[1:56])
+pred1<-predict(model1,test1[1:55])
+tab<-table(test1$classe,pred1)
+pred2<-predict(model1,test2[1:55])
+tab2<-table(test2$classe,pred2)
+pred3<-predict(model1,test3[1:55])
+tab3<-table(test3$classe,pred3)
+
+```
+
+```{r modelout,echo=FALSE,cache=TRUE}
+print(model1)
+tab<-as.matrix(tab)
+tab2<-as.matrix(tab2)
+tab3<-as.matrix(tab3)
+
+```
+
+
+
+As we can see from the confusion Matix, the error rate is quite low = 0.28%.
+
+We use the above model to predict classe values for the first test data set and  plot the predicted values against the actual classe values:
+
+`r tab`
+
+We can see 21 cases out of 6541 total test values where there is mismatch. This gives misclassification error of 0.003 which shows that our model predicts 
+quite well.
+
+We expect the same error rate when we use this model on the other test data sets generated using k fold. In fact when this model is fited into the other 2 
+test sets, we get the below tables when comparing actual to predicted values:
+
+Test data set 2:
+
+`r tab2`
+
+Test data set 3:
+
+`r tab3`
+
+
+We see misclassification error is 0 in both cases which shows absolute purity.
+
+We get similar outputs when we plot different models on the other 2 training datasets and cross validate on the other test data sets. In all cases error is quite low.
+
+### Predicting Output
+
+We use the above model to predict the output in the actual test data set:
+
+```{r predictout,echo=FALSE,cache=TRUE}
+
+testing1<-rbind(test[1:55],test1[1:55])
+pred1f<-predict(model1,testing1)
+out<-pred1f[1:20]
+
+
+```
+
+The predicted classe for the 20 test cases comes out correctly to be:
+
+`r out`
